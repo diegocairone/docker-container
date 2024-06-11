@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  mongodb6jammy:
+    image: mongo:6.0.13-jammy
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/db:/data/db
+    networks:
+      - mongodbjammy-net
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=Develop#2024
+
+  mongo-express:
+    image: mongo-express:1.0.2-20-alpine3.19  # Or a specific version
+    depends_on:
+      - mongodb6jammy
+    networks:
+      - mongodbjammy-net
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=Develop#2024
+      - ME_CONFIG_MONGODB_URL=mongodb://admin:Develop%232024@mongodb6jammy:27017/?authSource=admin
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=Develop#2024
+
+
+networks:
+  mongodbjammy-net:
+    driver: bridge
+

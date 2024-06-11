@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  elasticsearch-7-17-6:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.16
+    container_name: elasticsearch-7-17-6
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata-7-17-6:/usr/share/elasticsearch/data
+    networks:
+      - es-net-7-17-6
+    
+  kibana-7-17-6:
+    image: docker.elastic.co/kibana/kibana:7.17.16
+    container_name: kibana-7-17-6
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch-7-17-6:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - es-net-7-17-6
+    depends_on:
+      - elasticsearch-7-17-6
+
+volumes:
+  esdata-7-17-6:
+
+networks:
+  es-net-7-17-6:
+    driver: bridge

@@ -1,0 +1,16 @@
+version: '3.5'
+
+services:
+  poc-imagemagick-webapi:
+    image: diegocairone/poc-imagemagick-webapi:latest
+    environment:
+      - COMMAND_SHELL=sh
+      - IM_MOGRIFY_COMMAND_PATH=/usr/bin/mogrify
+    ports:
+      - "5000:8080"
+    networks:
+      - my-net
+
+networks:
+  my-net:
+    driver: bridge

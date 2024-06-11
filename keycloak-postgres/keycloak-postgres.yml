@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: kp_postgres_container
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - keycloak-net
+    volumes:
+      - postgres-data-01:/data/postgres
+
+  keycloak:
+    container_name: kp_keycloak_container
+    image: jboss/keycloak:latest
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: changeme
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_PORT: 5432
+      DB_DATABASE: keycloak
+      DB_USER: postgres
+      DB_PASSWORD: changeme
+    ports:
+      - "8181:8080"
+    networks:
+      - keycloak-net
+    depends_on:
+      - postgres
+
+  
+  # docker pull dpage/pgadmin4:8.3
+  pgadmin:
+    container_name: kp_pgadmin_container
+    image: dpage/pgadmin4:8.3
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: changeme
+    ports:
+      - "5050:80"
+    networks:
+      - keycloak-net
+    depends_on:
+      - postgres
+    volumes:
+       - pgadmin-01:/var/lib/pgadmin
+
+networks:
+  keycloak-net:
+    driver: bridge
+
+volumes:
+  postgres-data-01:
+  pgadmin-01:

@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+  poc-aws-textract:
+    image: diegocairone/poc-aws-textract:latest
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/filestore
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=changeme
+      - AWS_ACCESS_KEY_ID=AKIAY7FYHGOOEJZM7MOV
+      - AWS_SECRET_ACCESS_KEY=
+    ports:
+      - "8080:8080"
+    networks:
+      - my-net
+
+networks:
+  my-net:
+    driver: bridge

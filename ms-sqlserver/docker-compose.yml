@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  ms-sqlserver:
+    container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-CU18-ubuntu-20.04
+    ports:
+      - 1433:1433
+    environment:
+      - "ACCEPT_EULA=Y"
+      - "MSSQL_SA_PASSWORD=Develop#2024"
+    volumes:
+      - ./data:/var/opt/mssql/data  # Persistent data volume
+      - ./backups:/var/opt/mssql/backups  # Backup folder (bind-mount)
+      - sqlserver_config:/var/opt/mssql/config  # Configuration folder
+      
+volumes:
+  sqlserver_config: {}
+  

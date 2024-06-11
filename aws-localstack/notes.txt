@@ -1,0 +1,11 @@
+
+docker pull localstack/localstack:3.0
+
+docker run -p 4566:4566 -e SERVICES=sqs --name localstack-sqs localstack/localstack:3.0
+
+aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name issmp-users-confirmed
+aws --endpoint-url=http://localhost:4566 sqs get-queue-url --queue-name issmp-users-confirmed
+
+
+aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name issmp-posts-created
+aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name issmp-posts-created

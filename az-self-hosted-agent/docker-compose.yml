@@ -1,0 +1,9 @@
+# https://github.com/khezen/compose-postgres
+version: '3.5'
+
+services:
+  postgres:
+    container_name: azp-agent
+    image: azp-agent:latest
+
+    

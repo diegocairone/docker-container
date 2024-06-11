@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  debezium-connect:
+    image: debezium/connect:2.6.0.Final
+    container_name: debezium-connect
+    environment:
+      # Connection details for the remote Kafka cluster
+      BOOTSTRAP_SERVERS: "kafka:9092"
+      CONNECT_NAME: local-debezium-connector
+      GROUP_ID: 1 
+      CONFIG_STORAGE_TOPIC: local_debezium_connect_configs 
+      OFFSET_STORAGE_TOPIC: local_debezium_connect_offsets 
+      STATUS_STORAGE_TOPIC: local_debezium_connect_statuses
+      KEY_CONVERTER: io.confluent.connect.avro.AvroConverter
+      VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://kafka-schema-registry:8081
+      #CONNECT_PLUGIN_PATH: '/opt/plugins'
+    volumes:
+      - /Users/diego.cairone/Devspace/docker/debezium-connect/plugins:/kafka/connect/plugins
+    ports:
+      - "8083:8083" 
+
+
+  debezium-ui:
+    image: debezium/debezium-ui:1.9
+    container_name: debezium-ui
+    environment:
+      KAFKA_CONNECT_URIS: http://debezium-connect:8083
+    ports:
+      - "8084:8080" 

@@ -1,0 +1,34 @@
+version: "3.7"
+
+
+networks:
+  debezium_network:
+    driver: bridge
+
+services:
+  debezium-connect:
+    image: debezium/connect:2.6.0.Final
+    container_name: debezium-connect
+    environment:
+      # Connection details for the remote Kafka cluster
+      BOOTSTRAP_SERVERS: "localhost:19091,localhost:29092,localhost:39093"
+      CONNECT_NAME: local-debezium-connector
+      GROUP_ID: 1 
+      CONFIG_STORAGE_TOPIC: local_debezium_connect_configs 
+      OFFSET_STORAGE_TOPIC: local_debezium_connect_offsets 
+      STATUS_STORAGE_TOPIC: local_debezium_connect_statuses
+    ports:
+      - "8083:8083" 
+    networks: 
+      - debezium_network
+
+
+  debezium-ui:
+    image: debezium/debezium-ui:1.9
+    container_name: debezium-ui
+    environment:
+      KAFKA_CONNECT_URIS: 'http://debezium-connect:8083'
+    ports:
+      - "8084:8084" 
+    networks: 
+      - debezium_network

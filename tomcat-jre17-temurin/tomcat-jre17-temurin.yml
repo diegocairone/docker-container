@@ -1,0 +1,9 @@
+version: "3.9"  # Adjust the version if needed
+
+services:
+  tomcat-jre17-temurin:
+    image: tomcat:jre17-temurin
+    ports:
+      - "8181:8080"  # Map container port 8080 to host port 8080
+    volumes:
+      - ./webapps:/usr/local/tomcat/webapps

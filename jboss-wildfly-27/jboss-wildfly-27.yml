@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  wildfly:
+    image: quay.io/wildfly/wildfly:27.0.0.Final-jdk17
+    container_name: wildfly-27-0-0-jdk17
+    ports:
+      - "8080:8080"  # HTTP port
+      - "9990:9990"  # Management port
+      - "8787:8787"  # Debug port
+    command: ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0", "--debug", "*:8787"]
+    volumes:
+      - ./deployments:/opt/jboss/wildfly/standalone/deployments  
