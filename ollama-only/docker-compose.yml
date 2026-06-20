@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  ollama-only:
+    image: ollama/ollama:latest
+    container_name: ollama-only
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_NUM_PARALLEL=2 # Permite atender a OpenCode y WebUI en paralelo si es necesario
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./huggingface:/root/.ollama/huggingface:ro
+    networks:
+      - ai-network
+    #entrypoint: [ "/bin/sh", "-c", "update-ca-certificates && exec /bin/ollama serve" ]
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+
+networks:
+  ai-network:
+    driver: bridge
+
