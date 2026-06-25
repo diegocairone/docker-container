@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # 1. The Pull-Through Cache Registry
+  docker-cache:
+    image: registry:2
+    container_name: docker-cache
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:5000:5000"
+    environment:
+      - REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io
+      - REGISTRY_STORAGE_DELETE_ENABLED=true
+    volumes:
+      - docker_cache_data:/var/lib/registry
+
+  # 2. The Web User Interface (acting as the single entry point)
+  docker-cache-ui:
+    image: joxit/docker-registry-ui:latest
+    container_name: docker-cache-ui
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:8080:80"
+    environment:
+      - REGISTRY_TITLE=Local Docker Cache
+      # CHANGED: We use NGINX_PROXY_PASS_URL instead of REGISTRY_URL
+      - NGINX_PROXY_PASS_URL=http://docker-cache:5000
+      - SINGLE_REGISTRY=true
+      - DELETE_IMAGES=true
+    depends_on:
+      - docker-cache
+
+volumes:
+  docker_cache_data:

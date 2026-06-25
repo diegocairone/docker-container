@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  reposilite:
+    image: dzikoysk/reposilite:latest
+    container_name: reposilite
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./reposilite-data:/app/data
+    restart: no
+    environment:
+      - TZ=UTC
+      # Force Reposilite to inject this root token directly into the new database
+      # gabWZYVHvsqx2ovCpVRyFxk8T/kC+qojiSGJUHl5BaJCHpgIcDgF1FBxpfcwg9Oa
+      - REPOSILITE_TOKEN_MANAGER=manager:secret123
+      # Step 1: Stop your background container
+      # Step 2: Boot Reposilite directly into your Terminal:
+      #    docker run -it --rm -v ./reposilite-data:/app/data dzikoysk/reposilite:latest
+      # Step 3: Generate the Token
+      #    token-generate manager m
+      # Step 4: Exit and Restart
+    command: >
+      --hostname 0.0.0.0
+      --port 8081
+      --proxy https://repo1.maven.org/maven2/

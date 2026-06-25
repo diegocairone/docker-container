@@ -1,16 +1,14 @@
 # https://github.com/khezen/compose-postgres
-version: '3.5'
 
 services:
-  # PostgreSQL 15.3 (Debian 15.3-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
-  postgres:
-    container_name: postgres_container
-    image: postgres
+  postgres-15:
+    container_name: postgres_container_15
+    image: postgres:15
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
       PGDATA: /data/postgres
-      TZ: America/Argentina/Buenos_Aires # Set the timezone here
+      TZ: UTC 
     volumes:
        - postgres:/data/postgres
     ports:
@@ -19,10 +17,9 @@ services:
       - postgres
     restart: unless-stopped
   
-  # pgAdmin 4 version 7.3
-  # docker pull dpage/pgadmin4:7.3
+  # pgAdmin
   pgadmin:
-    container_name: pgadmin_container
+    container_name: pgadmin_container_15
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
@@ -37,7 +34,7 @@ services:
       - postgres
     restart: unless-stopped
     depends_on:
-      - postgres
+      - postgres-15
 
 networks:
   postgres:

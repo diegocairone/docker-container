@@ -4,6 +4,5 @@ docker run \
    --name minio1 \
    -e "MINIO_ROOT_USER=admin" \
    -e "MINIO_ROOT_PASSWORD=changeme" \
-   -v /Users/diego.cairone/Devspace/docker/min-io/data:/data \
-   quay.io/minio/minio server /data --console-address ":9001"
-   
+   -v ~/data:/data \
+   minio/minio server /data --console-address ":9001"
